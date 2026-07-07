@@ -113,13 +113,20 @@ def analyze_banner_with_groq(image_bytes, mime_type):
                 }
             ],
             "temperature": 0.7,
-            "max_completion_tokens": 400,
+            "max_completion_tokens": 700,
+            "reasoning_format": "hidden",  # sirf final caption chahiye, internal <think> nahi
         },
         timeout=60,
     )
     response.raise_for_status()
     data = response.json()
-    return data["choices"][0]["message"]["content"].strip()
+    caption = data["choices"][0]["message"]["content"].strip()
+
+    # Safety net: agar kabhi <think>...</think> aa jaye to usse hata do
+    if "<think>" in caption and "</think>" in caption:
+        caption = caption.split("</think>", 1)[1].strip()
+
+    return caption
 
 
 def send_to_telegram(image_bytes, caption, filename):
