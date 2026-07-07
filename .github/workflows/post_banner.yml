@@ -1,0 +1,32 @@
+name: Auto Post Banner to Telegram
+
+on:
+  schedule:
+    # Har din subah 8:30 AM IST (UTC 03:00) pe chalega
+    - cron: "0 3 * * *"
+  workflow_dispatch: {}   # Manually bhi chala sakte ho "Run workflow" button se
+
+jobs:
+  post-banner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repo checkout karo
+        uses: actions/checkout@v4
+
+      - name: Python setup karo
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Dependencies install karo
+        run: pip install -r requirements.txt
+
+      - name: Banner post karo
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL: ${{ secrets.TELEGRAM_CHANNEL }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GDRIVE_NEW_FOLDER_ID: ${{ secrets.GDRIVE_NEW_FOLDER_ID }}
+          GDRIVE_POSTED_FOLDER_ID: ${{ secrets.GDRIVE_POSTED_FOLDER_ID }}
+          GDRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}
+        run: python post_banner.py
