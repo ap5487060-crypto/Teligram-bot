@@ -44,11 +44,12 @@ def get_drive_service():
 
 
 def get_oldest_pending_file(drive):
-    """new_banners folder mein sabse purani image file dhoondo."""
+    """new_banners folder mein filename ke hisab se sabse pehli image dhoondo.
+    Filename-sort (day001, day002...) bulk upload ke liye reliable hai."""
     query = f"'{NEW_FOLDER_ID}' in parents and trashed = false and mimeType contains 'image/'"
     results = drive.files().list(
         q=query,
-        orderBy="createdTime",
+        orderBy="name",
         fields="files(id, name, createdTime, mimeType)",
         pageSize=1,
     ).execute()
