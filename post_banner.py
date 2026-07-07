@@ -114,7 +114,7 @@ def analyze_banner_with_groq(image_bytes, mime_type):
             ],
             "temperature": 0.7,
             "max_completion_tokens": 700,
-            "reasoning_format": "hidden",  # sirf final caption chahiye, internal <think> nahi
+            "reasoning_effort": "none",  # Qwen models ke liye thinking mode poora band karta hai
         },
         timeout=60,
     )
